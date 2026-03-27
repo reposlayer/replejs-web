@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react";
 interface Particle {
   x: number;
   y: number;
+  z: number; // For 3D parallax depth computation
   size: number;
   vx: number;
   vy: number;
@@ -39,12 +40,18 @@ export default function InteractiveCanvas() {
     let isMoving = false;
     let moveTimeout: NodeJS.Timeout;
 
+    // Simulate 3D Camera Pan
+    let cameraX = 0;
+    let cameraY = 0;
+
     const addParticle = (x: number, y: number, isAmbient: boolean = false) => {
-      const isBokeh = Math.random() > 0.8; // 20% are large, soft depth-of-field orbs
+      const isBokeh = Math.random() > 0.8; 
+      const zDepth = isBokeh ? (Math.random() * 2 + 0.1) : (Math.random() * 0.5 + 0.8); // Bokeh is close to camera (low z), dust is far (high z)
       
       particles.push({
         x: x + (Math.random() - 0.5) * (isBokeh ? 120 : 40),
         y: y + (Math.random() - 0.5) * (isBokeh ? 120 : 40),
+        z: zDepth,
         size: isBokeh ? Math.random() * 18 + 12 : Math.random() * 2 + 0.5,
         vx: (Math.random() - 0.5) * 0.3,
         vy: (Math.random() - 0.5) * 0.3 - (isAmbient ? 0.3 : 0.1),
@@ -67,6 +74,10 @@ export default function InteractiveCanvas() {
       mouse.x = e.clientX;
       mouse.y = e.clientY;
       isMoving = true;
+
+      // Update virtual camera look-at angle based on mouse
+      cameraX += (mouse.x - width / 2) * 0.02;
+      cameraY += (mouse.y - height / 2) * 0.02;
 
       clearTimeout(moveTimeout);
       moveTimeout = setTimeout(() => { isMoving = false; }, 100);
@@ -108,6 +119,10 @@ export default function InteractiveCanvas() {
          addParticle(Math.random() * width, height + 50, true);
       }
 
+      // Smooth camera interpolation towards 0 when mouse stops
+      cameraX *= 0.95;
+      cameraY *= 0.95;
+
       for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i];
         p.life++;
@@ -117,11 +132,10 @@ export default function InteractiveCanvas() {
           continue;
         }
 
-        // Soft physics
+        // Soft internal physics
         p.vy -= 0.002; 
         p.vx += Math.sin(p.life * p.oscillation) * 0.01; 
         
-        // Push away from mouse
         if (isMoving) {
            const dx = mouse.x - p.x;
            const dy = mouse.y - p.y;
@@ -138,21 +152,27 @@ export default function InteractiveCanvas() {
         p.x += p.vx;
         p.y += p.vy;
 
+        // Apply Parallax Translation based on 3D depth (Z index)
+        const parallaxX = p.x - (cameraX * p.z * 0.05);
+        const parallaxY = p.y - (cameraY * p.z * 0.05);
+
         const lifePercent = p.life / p.maxLife;
         let currentAlpha = Math.sin(lifePercent * Math.PI) * p.baseAlpha;
         if (currentAlpha < 0) currentAlpha = 0;
 
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.arc(parallaxX, parallaxY, p.size, 0, Math.PI * 2);
         
         if (p.isBokeh) {
-           ctx.fillStyle = `rgba(196, 181, 157, ${currentAlpha * 0.6})`;
+           // Electric Lime Bokeh
+           ctx.fillStyle = `rgba(212, 255, 0, ${currentAlpha * 0.4})`;
            ctx.shadowBlur = p.size * 2.5;
-           ctx.shadowColor = `rgba(196, 181, 157, ${currentAlpha * 0.4})`;
+           ctx.shadowColor = `rgba(212, 255, 0, ${currentAlpha * 0.3})`;
         } else {
-           ctx.fillStyle = `rgba(141, 126, 107, ${currentAlpha})`;
-           ctx.shadowBlur = p.size * 1.5;
-           ctx.shadowColor = `rgba(215, 205, 190, ${currentAlpha * 1.5})`;
+           // Sharp Lime Dust
+           ctx.fillStyle = `rgba(225, 255, 100, ${currentAlpha})`;
+           ctx.shadowBlur = p.size * 2;
+           ctx.shadowColor = `rgba(212, 255, 0, ${currentAlpha * 2})`;
         }
         
         ctx.fill();
@@ -174,7 +194,7 @@ export default function InteractiveCanvas() {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 pointer-events-none z-[1] mix-blend-normal"
+      className="fixed inset-0 pointer-events-none z-[1] mix-blend-plus-lighter"
       style={{ width: "100vw", height: "100vh" }}
     />
   );

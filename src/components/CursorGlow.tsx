@@ -6,22 +6,19 @@ import { motion, useMotionValue, useSpring } from "framer-motion";
 export default function CursorGlow() {
   const [isVisible, setIsVisible] = useState(false);
   const [isClicking, setIsClicking] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
 
-  // Raw mouse coordinates
   const mouseX = useMotionValue(-1000);
   const mouseY = useMotionValue(-1000);
 
-  // 1. The Core Dot (very fast, sharp tracking)
   const springCore = { damping: 40, stiffness: 400, mass: 0.1 };
   const coreX = useSpring(mouseX, springCore);
   const coreY = useSpring(mouseY, springCore);
 
-  // 2. The Mid Glow (slightly delayed, creating a wake)
-  const springMid = { damping: 30, stiffness: 150, mass: 0.5 };
+  const springMid = { damping: 30, stiffness: 150, mass: 0.4 };
   const midX = useSpring(mouseX, springMid);
   const midY = useSpring(mouseY, springMid);
 
-  // 3. The Grand Ambient Glow (slow, luxurious spread)
   const springAmbient = { damping: 20, stiffness: 60, mass: 1.2 };
   const ambientX = useSpring(mouseX, springAmbient);
   const ambientY = useSpring(mouseY, springAmbient);
@@ -33,25 +30,36 @@ export default function CursorGlow() {
       if (!isVisible) setIsVisible(true);
     };
 
+    const handleMouseOver = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.closest('a, button, [role="button"], .group, input, textarea')) {
+        setIsHovering(true);
+      } else {
+        setIsHovering(false);
+      }
+    };
+
     const handleMouseLeave = () => setIsVisible(false);
     const handleMouseEnter = () => setIsVisible(true);
     const handleMouseDown = () => setIsClicking(true);
     const handleMouseUp = () => setIsClicking(false);
 
     window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseover", handleMouseOver);
     document.addEventListener("mouseleave", handleMouseLeave);
     document.addEventListener("mouseenter", handleMouseEnter);
     document.addEventListener("mousedown", handleMouseDown);
     document.addEventListener("mouseup", handleMouseUp);
 
-    // Hide cursor on touch devices to prevent stuck UI
     if (window.matchMedia("(pointer: coarse)").matches) {
        setIsVisible(false);
        window.removeEventListener("mousemove", handleMouseMove);
+       window.removeEventListener("mouseover", handleMouseOver);
     }
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseover", handleMouseOver);
       document.removeEventListener("mouseleave", handleMouseLeave);
       document.removeEventListener("mouseenter", handleMouseEnter);
       document.removeEventListener("mousedown", handleMouseDown);
@@ -63,32 +71,24 @@ export default function CursorGlow() {
 
   return (
     <>
-      {/* 
-        LAYER 1: The Giant Ambient Bokeh Glow (z-[10]) 
-        Gently lights up the background canvas and slides beneath foreground text. 
-      */}
       <motion.div
         className="fixed top-0 left-0 pointer-events-none z-[10] rounded-full mix-blend-screen"
         style={{
-          width: "500px",
-          height: "500px",
+          width: "600px",
+          height: "600px",
           x: ambientX,
           y: ambientY,
           translateX: "-50%",
           translateY: "-50%",
-          background: "radial-gradient(circle, rgba(215, 185, 140, 0.12) 0%, rgba(141, 126, 107, 0.05) 30%, transparent 60%)",
-          filter: "blur(60px)",
+          background: "radial-gradient(circle, rgba(212, 255, 0, 0.08) 0%, rgba(212, 255, 0, 0.02) 30%, transparent 70%)",
+          filter: "blur(50px)",
           opacity: isVisible ? 1 : 0,
           transition: "opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1)",
         }}
       />
       
-      {/* 
-        LAYER 2: The Mid Reacting Halo (z-[40] - sits above most elements)
-        Provides immediate visual feedback when interacting or hovering.
-      */}
       <motion.div
-        className="fixed top-0 left-0 pointer-events-none z-[40] rounded-full mix-blend-exclusion"
+        className="fixed top-0 left-0 pointer-events-none z-[9998] rounded-full bg-white mix-blend-difference"
         style={{
           x: midX,
           y: midY,
@@ -96,35 +96,28 @@ export default function CursorGlow() {
           translateY: "-50%",
         }}
         animate={{
-          width: isClicking ? "40px" : "80px",
-          height: isClicking ? "40px" : "80px",
-          background: isClicking 
-             ? "radial-gradient(circle, rgba(141, 126, 107, 0.3) 0%, transparent 70%)" 
-             : "radial-gradient(circle, rgba(215, 185, 140, 0.15) 0%, transparent 70%)",
+          width: isHovering ? "90px" : (isClicking ? "30px" : "14px"),
+          height: isHovering ? "90px" : (isClicking ? "30px" : "14px"),
           opacity: isVisible ? 1 : 0,
         }}
-        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+        transition={{ type: "spring", stiffness: 300, damping: isHovering ? 25 : 20 }}
       />
 
-      {/* 
-        LAYER 3: The Sharp Core Dot (strict top layer tracking)
-        The physical point of interaction.
-      */}
       <motion.div
-        className="fixed top-0 left-0 pointer-events-none z-[9999] rounded-full bg-stone-900 border border-brand-200/50 shadow-[0_0_10px_rgba(215,185,140,0.5)]"
+        className="fixed top-0 left-0 pointer-events-none z-[9999] rounded-full bg-[#D4FF00] shadow-[0_0_20px_rgba(212,255,0,0.8)] mix-blend-screen"
         style={{
-          width: "8px",
-          height: "8px",
+          width: "6px",
+          height: "6px",
           x: coreX,
           y: coreY,
           translateX: "-50%",
           translateY: "-50%",
-          opacity: isVisible ? 1 : 0,
         }}
         animate={{
-          scale: isClicking ? 0.5 : 1,
+          scale: isHovering ? 0 : (isClicking ? 0.5 : 1),
+          opacity: isVisible ? (isHovering ? 0 : 1) : 0,
         }}
-        transition={{ type: "spring", stiffness: 400, damping: 25 }}
+        transition={{ type: "spring", stiffness: 500, damping: 25 }}
       />
     </>
   );
