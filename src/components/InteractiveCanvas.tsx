@@ -2,18 +2,27 @@
 
 import { useEffect, useRef } from "react";
 
-interface Particle {
+interface Ripple {
   x: number;
   y: number;
-  z: number; // For 3D parallax depth computation
-  size: number;
-  vx: number;
-  vy: number;
   life: number;
   maxLife: number;
+}
+
+interface Petal {
+  x: number;
+  y: number;
+  z: number;
+  size: number;
+  length: number;
+  vx: number;
+  vy: number;
+  theta: number; // Rotation
+  spin: number;  // Rotation speed
+  life: number;
   baseAlpha: number;
+  color: string;
   isBokeh: boolean;
-  oscillation: number;
 }
 
 export default function InteractiveCanvas() {
@@ -34,37 +43,45 @@ export default function InteractiveCanvas() {
     canvas.style.width = width + "px";
     canvas.style.height = height + "px";
 
-    let particles: Particle[] = [];
+    let particles: Petal[] = [];
+    let ripples: Ripple[] = [];
     let mouse = { x: -1000, y: -1000 };
     let lastMouse = { x: -1000, y: -1000 };
     let isMoving = false;
     let moveTimeout: NodeJS.Timeout;
 
-    // Simulate 3D Camera Pan
-    let cameraX = 0;
-    let cameraY = 0;
+    // Soft, luxurious cherry blossom color palette
+    const sakuraColors = [
+      "255, 183, 197", // Soft pink
+      "255, 204, 213", // Pastel pink
+      "255, 228, 225", // Misty rose
+      "255, 240, 245", // Lavender blush
+      "255, 105, 180"  // Hot pink deeper tones
+    ];
 
     const addParticle = (x: number, y: number, isAmbient: boolean = false) => {
-      const isBokeh = Math.random() > 0.8; 
-      const zDepth = isBokeh ? (Math.random() * 2 + 0.1) : (Math.random() * 0.5 + 0.8); // Bokeh is close to camera (low z), dust is far (high z)
+      const isBokeh = Math.random() > 0.6; 
+      const zDepth = isBokeh ? (Math.random() * 1.5 + 0.5) : (Math.random() * 0.5 + 0.8);
+      const color = sakuraColors[Math.floor(Math.random() * sakuraColors.length)];
       
       particles.push({
-        x: x + (Math.random() - 0.5) * (isBokeh ? 120 : 40),
-        y: y + (Math.random() - 0.5) * (isBokeh ? 120 : 40),
+        x: x,
+        y: y,
         z: zDepth,
-        size: isBokeh ? Math.random() * 18 + 12 : Math.random() * 2 + 0.5,
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: (Math.random() - 0.5) * 0.3 - (isAmbient ? 0.3 : 0.1),
-        life: 0,
-        maxLife: Math.random() * 100 + (isAmbient ? 200 : 150),
-        baseAlpha: isBokeh ? (Math.random() * 0.15 + 0.05) : (Math.random() * 0.4 + 0.1),
-        oscillation: Math.random() * 0.03 + 0.01,
+        size: isBokeh ? Math.random() * 20 + 10 : Math.random() * 4 + 2,
+        length: Math.random() * 2 + 1.2, // Elongation factor for petals
+        vx: (Math.random() - 0.5) * 1.5,
+        vy: Math.random() * 1.5 + 0.5, 
+        theta: Math.random() * Math.PI * 2,
+        spin: (Math.random() - 0.5) * 0.1,
+        life: Math.random() * 1000,
+        baseAlpha: isBokeh ? (Math.random() * 0.12 + 0.05) : (Math.random() * 0.6 + 0.2),
+        color: color,
         isBokeh
       });
     };
 
-    // Pre-seed ambient dust 
-    for(let i=0; i<30; i++) {
+    for(let i=0; i<60; i++) {
        addParticle(Math.random() * width, Math.random() * height, true);
     }
 
@@ -75,12 +92,8 @@ export default function InteractiveCanvas() {
       mouse.y = e.clientY;
       isMoving = true;
 
-      // Update virtual camera look-at angle based on mouse
-      cameraX += (mouse.x - width / 2) * 0.02;
-      cameraY += (mouse.y - height / 2) * 0.02;
-
       clearTimeout(moveTimeout);
-      moveTimeout = setTimeout(() => { isMoving = false; }, 100);
+      moveTimeout = setTimeout(() => { isMoving = false; }, 150);
 
       const dx = mouse.x - lastMouse.x;
       const dy = mouse.y - lastMouse.y;
@@ -88,11 +101,24 @@ export default function InteractiveCanvas() {
 
       if (lastMouse.x === -1000) return;
 
-      const spawnCount = Math.min(Math.floor(dist / 15), 3);
-      for (let i = 0; i < spawnCount; i++) {
-        const interpX = lastMouse.x + (dx * (i / spawnCount));
-        const interpY = lastMouse.y + (dy * (i / spawnCount));
-        addParticle(interpX, interpY, false);
+      // Ripples of air pushing through
+      if (dist > 15) {
+         ripples.push({ x: mouse.x, y: mouse.y, life: 0, maxLife: 30 });
+      }
+
+      // "Razbucivanje" force (Scattering the petals brutally gently)
+      for (let p of particles) {
+         const pdx = p.x - mouse.x;
+         const pdy = p.y - mouse.y;
+         const pDist = Math.sqrt(pdx * pdx + pdy * pdy);
+         
+         // Cursor aura pushes things away and makes them spin rapidly
+         if (pDist < 250) {
+            const force = (250 - pDist) / 250;
+            p.vx += (pdx / pDist) * force * (dist * 0.12);
+            p.vy += (pdy / pDist) * force * (dist * 0.12) - force * 2;
+            p.spin += (Math.random() - 0.5) * force * 0.6; // High spin
+         }
       }
     };
 
@@ -104,8 +130,6 @@ export default function InteractiveCanvas() {
       canvas.width = width * window.devicePixelRatio;
       canvas.height = height * window.devicePixelRatio;
       ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-      canvas.style.width = width + "px";
-      canvas.style.height = height + "px";
     };
     window.addEventListener("resize", handleResize);
 
@@ -114,68 +138,77 @@ export default function InteractiveCanvas() {
     const render = () => {
       ctx.clearRect(0, 0, width, height);
 
-      // Ambient Spawning
-      if (Math.random() > 0.75) { 
-         addParticle(Math.random() * width, height + 50, true);
+      // Continuously let petals softly fall
+      if (Math.random() > 0.4) { 
+         addParticle(Math.random() * width, -50, true);
       }
 
-      // Smooth camera interpolation towards 0 when mouse stops
-      cameraX *= 0.95;
-      cameraY *= 0.95;
+      for (let i = ripples.length - 1; i >= 0; i--) {
+         const r = ripples[i];
+         r.life++;
+         if (r.life >= r.maxLife) {
+            ripples.splice(i, 1);
+            continue;
+         }
+         const progress = r.life / r.maxLife;
+         ctx.beginPath();
+         ctx.arc(r.x, r.y, progress * 120, 0, Math.PI * 2);
+         ctx.strokeStyle = `rgba(255, 183, 197, ${(1 - progress) * 0.05})`;
+         ctx.lineWidth = 20;
+         ctx.stroke();
+      }
 
       for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i];
         p.life++;
 
-        if (p.life >= p.maxLife) {
-          particles.splice(i, 1);
-          continue;
-        }
-
-        // Soft internal physics
-        p.vy -= 0.002; 
-        p.vx += Math.sin(p.life * p.oscillation) * 0.01; 
+        // Extreme drag makes them float ethereally
+        p.vx *= 0.93; 
+        p.vy *= 0.93; 
         
-        if (isMoving) {
-           const dx = mouse.x - p.x;
-           const dy = mouse.y - p.y;
-           const dist = dx * dx + dy * dy;
-           if (dist < 15000) { 
-              p.vx -= (dx / dist) * 1.5;
-              p.vy -= (dy / dist) * 1.5;
-           }
-        }
-
-        p.vx *= 0.97;
-        p.vy *= 0.97;
+        // Return to natural soft falling
+        p.vy += 0.04 * p.z; 
+        p.vx += Math.sin(p.life * 0.03) * 0.06 * p.z; // Natural swaying
+        
+        p.theta += p.spin;
+        p.spin *= 0.95; 
 
         p.x += p.vx;
         p.y += p.vy;
 
-        // Apply Parallax Translation based on 3D depth (Z index)
-        const parallaxX = p.x - (cameraX * p.z * 0.05);
-        const parallaxY = p.y - (cameraY * p.z * 0.05);
+        if (p.y > height + 100) {
+           p.y = -50;
+           p.x = Math.random() * width;
+           p.vx = 0;
+        }
+        if (p.x > width + 100) p.x = -50;
+        if (p.x < -100) p.x = width + 50;
 
-        const lifePercent = p.life / p.maxLife;
-        let currentAlpha = Math.sin(lifePercent * Math.PI) * p.baseAlpha;
-        if (currentAlpha < 0) currentAlpha = 0;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.theta);
 
-        ctx.beginPath();
-        ctx.arc(parallaxX, parallaxY, p.size, 0, Math.PI * 2);
-        
         if (p.isBokeh) {
-           // Electric Lime Bokeh
-           ctx.fillStyle = `rgba(212, 255, 0, ${currentAlpha * 0.4})`;
-           ctx.shadowBlur = p.size * 2.5;
-           ctx.shadowColor = `rgba(212, 255, 0, ${currentAlpha * 0.3})`;
-        } else {
-           // Sharp Lime Dust
-           ctx.fillStyle = `rgba(225, 255, 100, ${currentAlpha})`;
+           ctx.beginPath();
+           ctx.ellipse(0, 0, p.size, p.size * p.length, 0, 0, Math.PI * 2);
+           ctx.fillStyle = `rgba(${p.color}, ${p.baseAlpha})`;
            ctx.shadowBlur = p.size * 2;
-           ctx.shadowColor = `rgba(212, 255, 0, ${currentAlpha * 2})`;
+           ctx.shadowColor = `rgba(${p.color}, ${p.baseAlpha * 0.8})`;
+           ctx.fill();
+        } else {
+           // Teardrop shape for petal
+           ctx.beginPath();
+           ctx.moveTo(0, -p.size * p.length);
+           ctx.bezierCurveTo(p.size, -p.size, p.size, p.size, 0, p.size * p.length);
+           ctx.bezierCurveTo(-p.size, p.size, -p.size, -p.size, 0, -p.size * p.length);
+           
+           ctx.fillStyle = `rgba(${p.color}, ${p.baseAlpha})`;
+           ctx.shadowBlur = p.size;
+           ctx.shadowColor = `rgba(${p.color}, ${p.baseAlpha * 1.5})`;
+           ctx.fill();
         }
         
-        ctx.fill();
+        ctx.restore();
       }
 
       animationFrameId = requestAnimationFrame(render);
@@ -194,8 +227,8 @@ export default function InteractiveCanvas() {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 pointer-events-none z-[1] mix-blend-plus-lighter"
-      style={{ width: "100vw", height: "100vh" }}
+      className="fixed inset-0 pointer-events-none z-[1] mix-blend-multiply opacity-80"
+      style={{ width: "100%", height: "100%" }}
     />
   );
 }

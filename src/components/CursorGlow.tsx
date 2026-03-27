@@ -72,15 +72,15 @@ export default function CursorGlow() {
   return (
     <>
       <motion.div
-        className="fixed top-0 left-0 pointer-events-none z-[10] rounded-full mix-blend-screen"
+        className="fixed top-0 left-0 pointer-events-none z-[10] rounded-full mix-blend-multiply"
         style={{
-          width: "600px",
-          height: "600px",
+          width: "700px",
+          height: "700px",
           x: ambientX,
           y: ambientY,
           translateX: "-50%",
           translateY: "-50%",
-          background: "radial-gradient(circle, rgba(212, 255, 0, 0.08) 0%, rgba(212, 255, 0, 0.02) 30%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(230, 200, 205, 0.15) 0%, rgba(245, 220, 225, 0.05) 40%, transparent 70%)",
           filter: "blur(50px)",
           opacity: isVisible ? 1 : 0,
           transition: "opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1)",
@@ -88,7 +88,7 @@ export default function CursorGlow() {
       />
       
       <motion.div
-        className="fixed top-0 left-0 pointer-events-none z-[9998] rounded-full bg-white mix-blend-difference"
+        className="fixed top-0 left-0 pointer-events-none z-[9998] rounded-full mix-blend-difference bg-white"
         style={{
           x: midX,
           y: midY,
@@ -96,15 +96,15 @@ export default function CursorGlow() {
           translateY: "-50%",
         }}
         animate={{
-          width: isHovering ? "90px" : (isClicking ? "30px" : "14px"),
-          height: isHovering ? "90px" : (isClicking ? "30px" : "14px"),
+          width: isHovering ? "100px" : (isClicking ? "40px" : "16px"),
+          height: isHovering ? "100px" : (isClicking ? "40px" : "16px"),
           opacity: isVisible ? 1 : 0,
         }}
         transition={{ type: "spring", stiffness: 300, damping: isHovering ? 25 : 20 }}
       />
 
       <motion.div
-        className="fixed top-0 left-0 pointer-events-none z-[9999] rounded-full bg-[#D4FF00] shadow-[0_0_20px_rgba(212,255,0,0.8)] mix-blend-screen"
+        className="fixed top-0 left-0 pointer-events-none z-[9999] rounded-full bg-[#FFB7C5] shadow-[0_0_20px_rgba(255,183,197,0.8)]"
         style={{
           width: "6px",
           height: "6px",
