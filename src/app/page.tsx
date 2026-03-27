@@ -8,6 +8,7 @@ import TiltCard from "@/components/TiltCard";
 import Magnetic from "@/components/Magnetic";
 import InteractiveGallery from "@/components/InteractiveGallery";
 import InteractiveCanvas from "@/components/InteractiveCanvas";
+import CursorGlow from "@/components/CursorGlow";
 
 export default function Home() {
   return (
@@ -15,6 +16,9 @@ export default function Home() {
       
       {/* Frame by Frame Mouse Canvas Layer */}
       <InteractiveCanvas />
+      
+      {/* Immersive Cursor Depth Layer */}
+      <CursorGlow />
 
       {/* Immersive Parallax Hero Component */}
       <HeroParallax />
