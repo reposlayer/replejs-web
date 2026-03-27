@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+@theme {
+  --color-stone-50: #FCFBF8;
+  --color-stone-100: #F3F1E7;
+  --color-stone-800: #2C302E;
+  --color-stone-900: #1B1E1C;
+  --color-accent-400: #A89F91;
+  --color-accent-700: #736C61;
+  
+  /* Classy forest green/sage accents for nature feel */
+  --color-brand-100: #E6EAE3;
+  --color-brand-400: #8FA690;
+  --color-brand-700: #465848;
+  --color-brand-900: #263327;
+
+  --font-sans: var(--font-montserrat);
+  --font-serif: var(--font-cormorant);
+}
+
+html, body {
+  @apply bg-stone-50 text-stone-900 font-sans font-light;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  @apply font-serif font-light;
+}
+
+@keyframes blob {
+  0% { transform: translate(0px, 0px) scale(1); }
+  33% { transform: translate(30px, -50px) scale(1.1); }
+  66% { transform: translate(-20px, 20px) scale(0.9); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+.animate-blob {
+  animation: blob 15s infinite alternate ease-in-out;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
