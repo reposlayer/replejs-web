@@ -3,7 +3,7 @@ import { MoveRight } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="bg-stone-900 text-stone-300 py-16 md:py-24 border-t border-brand-800">
+    <footer className="relative z-20 bg-stone-900 text-stone-300 py-16 md:py-24 border-t border-brand-800">
       <div className="max-w-7xl mx-auto px-4 md:px-8 grid grid-cols-1 md:grid-cols-4 gap-12 text-sm">
         
         {/* Brand */}

@@ -107,11 +107,11 @@ export default function CursorGlow() {
       />
 
       {/* 
-        LAYER 3: The Sharp Core Dot (z-[50] - strict top layer tracking)
+        LAYER 3: The Sharp Core Dot (strict top layer tracking)
         The physical point of interaction.
       */}
       <motion.div
-        className="fixed top-0 left-0 pointer-events-none z-[50] rounded-full bg-stone-900 border border-brand-200/50 shadow-[0_0_10px_rgba(215,185,140,0.5)]"
+        className="fixed top-0 left-0 pointer-events-none z-[9999] rounded-full bg-stone-900 border border-brand-200/50 shadow-[0_0_10px_rgba(215,185,140,0.5)]"
         style={{
           width: "8px",
           height: "8px",

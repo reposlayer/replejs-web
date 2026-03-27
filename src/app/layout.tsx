@@ -3,9 +3,10 @@ import { Cormorant_Garamond, Montserrat } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import CustomCursor from "@/components/CustomCursor";
+import CursorGlow from "@/components/CursorGlow";
+import InteractiveCanvas from "@/components/InteractiveCanvas";
 import SmoothScroll from "@/components/SmoothScroll";
-import GradientBlob from "@/components/GradientBlob";
+import FilmGrain from "@/components/FilmGrain";
 
 const serif = Cormorant_Garamond({
   subsets: ["latin", "latin-ext"],
@@ -36,11 +37,12 @@ export default function RootLayout({
       <body
         className={`${sans.variable} ${serif.variable} font-sans antialiased bg-stone-50 text-stone-900 selection:bg-brand-200 selection:text-brand-900 flex flex-col min-h-screen md:cursor-none`}
       >
-        <GradientBlob />
+        <FilmGrain />
+        <InteractiveCanvas />
+        <CursorGlow />
         <SmoothScroll>
-          <CustomCursor />
           <Navbar />
-          <main className="flex-grow flex flex-col relative z-10">{children}</main>
+          <main className="flex-grow flex flex-col pt-16 md:pt-24">{children}</main>
           <Footer />
         </SmoothScroll>
       </body>

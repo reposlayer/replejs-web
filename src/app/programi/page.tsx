@@ -23,7 +23,7 @@ export default function Programi() {
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-300/10 blur-[150px] rounded-full pointer-events-none mix-blend-multiply" />
       <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-brand-400/5 blur-[150px] rounded-full pointer-events-none mix-blend-multiply" />
 
-      <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-20">
         <motion.div 
            initial={{ opacity: 0, y: 20 }}
            animate={{ opacity: 1, y: 0 }}

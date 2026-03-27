@@ -47,13 +47,13 @@ export default async function RadionicaPage({
   }
 
   return (
-    <main className="min-h-screen bg-stone-50 pb-24 relative selection:bg-brand-400 selection:text-white">
+    <main className="min-h-screen bg-transparent pb-24 relative selection:bg-brand-400 selection:text-white">
       {/* Background Ambience */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-100/40 blur-[150px] rounded-full pointer-events-none" />
       <div className="absolute top-1/2 left-0 w-[400px] h-[600px] bg-stone-200/50 blur-[150px] rounded-full pointer-events-none" />
 
       {/* Header */}
-      <section className="pt-32 pb-16 px-4 relative z-10 border-b border-stone-200/50 bg-white/30 backdrop-blur-3xl">
+      <section className="pt-32 pb-16 px-4 relative z-20 border-b border-stone-200/50 bg-white/30 backdrop-blur-3xl">
         <div className="max-w-4xl mx-auto">
           <Link
             href="/radionice"
@@ -68,7 +68,7 @@ export default async function RadionicaPage({
       </section>
 
       {/* Content */}
-      <section className="max-w-4xl mx-auto px-4 mt-16 relative z-10">
+      <section className="max-w-4xl mx-auto px-4 mt-16 relative z-20">
          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
             <div className="md:col-span-2">
                <p className="text-xl text-stone-600 leading-relaxed font-light mb-12">

@@ -45,12 +45,12 @@ const scheduleData = [
 
 export default function RasporedPage() {
   return (
-    <main className="min-h-screen bg-stone-50 selection:bg-brand-400 selection:text-white pt-32 pb-24 overflow-hidden relative">
+    <main className="min-h-screen bg-transparent selection:bg-brand-400 selection:text-white pt-32 pb-24 overflow-hidden relative">
       {/* Background Ambience */}
       <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-brand-200/20 blur-[150px] rounded-full pointer-events-none" />
       <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-stone-400/10 blur-[150px] rounded-full pointer-events-none" />
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
         <motion.div
            initial={{ opacity: 0, y: 20 }}
            animate={{ opacity: 1, y: 0 }}
@@ -85,7 +85,7 @@ export default function RasporedPage() {
               transition={{ duration: 0.6, delay: idx * 0.1 }}
               className="relative"
             >
-              <div className="sticky top-24 z-20 backdrop-blur-xl bg-stone-50/80 w-full pb-4 mb-2 border-b border-brand-200">
+              <div className="sticky top-24 z-20 backdrop-blur-xl bg-transparent/80 w-full pb-4 mb-2 border-b border-brand-200">
                 <h2 className="text-3xl font-serif text-brand-900 flex items-center gap-4">
                    {dayData.day} <span className="text-xs font-sans uppercase tracking-widest text-stone-400 mt-2">{dayData.classes.length} termina</span>
                 </h2>

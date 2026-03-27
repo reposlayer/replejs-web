@@ -7,19 +7,11 @@ import HeroParallax from "@/components/HeroParallax";
 import TiltCard from "@/components/TiltCard";
 import Magnetic from "@/components/Magnetic";
 import InteractiveGallery from "@/components/InteractiveGallery";
-import InteractiveCanvas from "@/components/InteractiveCanvas";
-import CursorGlow from "@/components/CursorGlow";
 
 export default function Home() {
   return (
-    <main className="min-h-screen selection:bg-brand-400 selection:text-white pb-0 group/main relative overflow-hidden bg-stone-50">
+    <div className="min-h-screen selection:bg-brand-400 selection:text-white pb-0 group/main relative overflow-hidden bg-transparent">
       
-      {/* Frame by Frame Mouse Canvas Layer */}
-      <InteractiveCanvas />
-      
-      {/* Immersive Cursor Depth Layer */}
-      <CursorGlow />
-
       {/* Immersive Parallax Hero Component */}
       <HeroParallax />
 
@@ -118,7 +110,7 @@ export default function Home() {
          </motion.div>
       </section>
 
-    </main>
+    </div>
   );
 }
 

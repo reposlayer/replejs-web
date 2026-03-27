@@ -13,11 +13,11 @@ export default function ONamaPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-stone-50 pt-32 pb-24 relative selection:bg-brand-400 selection:text-white overflow-hidden">
+    <main className="min-h-screen bg-transparent pt-32 pb-24 relative selection:bg-brand-400 selection:text-white overflow-hidden">
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-300/10 blur-[150px] rounded-full mix-blend-multiply pointer-events-none" />
       <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-brand-400/5 blur-[150px] rounded-full mix-blend-multiply pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-20">
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 mb-32 items-center">
           <motion.div 
             initial={{ opacity: 0, x: -30 }}

@@ -27,10 +27,10 @@ export default function RadionicePage() {
   ];
 
   return (
-    <main className="min-h-screen pt-32 pb-24 relative selection:bg-brand-400 selection:text-white overflow-hidden bg-stone-50/50">
+    <main className="min-h-screen pt-32 pb-24 relative selection:bg-brand-400 selection:text-white overflow-hidden bg-transparent/50">
       <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-brand-200/20 blur-[120px] rounded-full mix-blend-multiply pointer-events-none" />
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -61,7 +61,7 @@ export default function RadionicePage() {
                 <div className="group relative bg-white/60 backdrop-blur-3xl rounded-3xl p-8 md:p-12 border border-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_50px_rgba(var(--brand-900),0.08)] flex flex-col md:flex-row gap-8 items-start md:items-center overflow-hidden transition-all duration-700">
                   <div className="absolute inset-0 bg-gradient-to-br from-brand-50/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
                   
-                  <div className="flex-1 relative z-10">
+                  <div className="flex-1 relative z-20">
                     <div className="flex flex-wrap items-center gap-4 mb-6 text-sm font-medium tracking-wide">
                       <span className={`px-4 py-1.5 rounded-full uppercase text-xs tracking-widest ${item.available ? 'bg-brand-100/50 text-brand-700 border border-brand-200' : 'bg-stone-100 text-stone-500 border border-stone-200'}`}>
                         {item.status}

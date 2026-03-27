@@ -6,11 +6,11 @@ import TiltCard from '@/components/TiltCard';
 
 export default function KontaktPage() {
   return (
-    <main className="min-h-screen bg-stone-50 pt-32 pb-24 relative selection:bg-brand-400 selection:text-white overflow-hidden">
+    <main className="min-h-screen bg-transparent pt-32 pb-24 relative selection:bg-brand-400 selection:text-white overflow-hidden">
       <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-brand-200/20 blur-[150px] rounded-full mix-blend-multiply pointer-events-none" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-brand-400/5 blur-[150px] rounded-full mix-blend-multiply pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-20">
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-start">
           
           {/* Lijeva Kolona: Tekstualni Podaci */}
@@ -78,7 +78,7 @@ export default function KontaktPage() {
                 
                 <h3 className="text-2xl font-serif text-stone-900 mb-8 tracking-tight">Pošaljite Upit</h3>
                 
-                <div className="space-y-6 relative z-10 font-light">
+                <div className="space-y-6 relative z-20 font-light">
                   <div>
                     <label className="block text-xs uppercase tracking-widest text-stone-500 font-semibold mb-2 ml-1">Vaše Ime</label>
                     <input type="text" className="w-full bg-white border border-stone-200 rounded-2xl px-6 py-4 outline-none focus:border-brand-400 focus:ring-4 focus:ring-brand-100/50 transition-all text-stone-800 placeholder:text-stone-300" placeholder="Ana Anić" />
