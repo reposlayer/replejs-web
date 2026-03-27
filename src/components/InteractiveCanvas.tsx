@@ -6,13 +6,13 @@ interface Particle {
   x: number;
   y: number;
   size: number;
-  angle: number;
-  rotSpeed: number;
   vx: number;
   vy: number;
   life: number;
   maxLife: number;
-  alpha: number;
+  baseAlpha: number;
+  isBokeh: boolean;
+  oscillation: number;
 }
 
 export default function InteractiveCanvas() {
@@ -36,49 +36,56 @@ export default function InteractiveCanvas() {
     let particles: Particle[] = [];
     let mouse = { x: -1000, y: -1000 };
     let lastMouse = { x: -1000, y: -1000 };
+    let isMoving = false;
+    let moveTimeout: NodeJS.Timeout;
+
+    const addParticle = (x: number, y: number, isAmbient: boolean = false) => {
+      const isBokeh = Math.random() > 0.8; // 20% are large, soft depth-of-field orbs
+      
+      particles.push({
+        x: x + (Math.random() - 0.5) * (isBokeh ? 120 : 40),
+        y: y + (Math.random() - 0.5) * (isBokeh ? 120 : 40),
+        size: isBokeh ? Math.random() * 18 + 12 : Math.random() * 2 + 0.5,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3 - (isAmbient ? 0.3 : 0.1),
+        life: 0,
+        maxLife: Math.random() * 100 + (isAmbient ? 200 : 150),
+        baseAlpha: isBokeh ? (Math.random() * 0.15 + 0.05) : (Math.random() * 0.4 + 0.1),
+        oscillation: Math.random() * 0.03 + 0.01,
+        isBokeh
+      });
+    };
+
+    // Pre-seed ambient dust 
+    for(let i=0; i<30; i++) {
+       addParticle(Math.random() * width, Math.random() * height, true);
+    }
 
     const handleMouseMove = (e: MouseEvent) => {
       lastMouse.x = mouse.x;
       lastMouse.y = mouse.y;
       mouse.x = e.clientX;
       mouse.y = e.clientY;
+      isMoving = true;
+
+      clearTimeout(moveTimeout);
+      moveTimeout = setTimeout(() => { isMoving = false; }, 100);
 
       const dx = mouse.x - lastMouse.x;
       const dy = mouse.y - lastMouse.y;
       const dist = Math.sqrt(dx * dx + dy * dy);
 
-      if (lastMouse.x === -1000) {
-         lastMouse.x = mouse.x;
-         lastMouse.y = mouse.y;
-         return;
-      }
+      if (lastMouse.x === -1000) return;
 
-      // Smooth interpolation for particle spawning
-      const spawnCount = Math.min(Math.floor(dist / 5) + 1, 8);
+      const spawnCount = Math.min(Math.floor(dist / 15), 3);
       for (let i = 0; i < spawnCount; i++) {
         const interpX = lastMouse.x + (dx * (i / spawnCount));
         const interpY = lastMouse.y + (dy * (i / spawnCount));
-        
-        const scatterRange = 25;
-        const scatterX = (Math.random() - 0.5) * scatterRange;
-        const scatterY = (Math.random() - 0.5) * scatterRange;
-
-        particles.push({
-          x: interpX + scatterX,
-          y: interpY + scatterY,
-          size: Math.random() * 6 + 3, 
-          angle: Math.random() * Math.PI * 2,
-          rotSpeed: (Math.random() - 0.5) * 0.05,
-          vx: (Math.random() - 0.5) * 0.4,
-          vy: (Math.random() - 0.5) * 0.4 - 0.5,
-          life: 0,
-          maxLife: Math.random() * 40 + 50, 
-          alpha: Math.random() * 0.6 + 0.4 
-        });
+        addParticle(interpX, interpY, false);
       }
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
 
     const handleResize = () => {
       width = window.innerWidth;
@@ -96,6 +103,11 @@ export default function InteractiveCanvas() {
     const render = () => {
       ctx.clearRect(0, 0, width, height);
 
+      // Ambient Spawning
+      if (Math.random() > 0.75) { 
+         addParticle(Math.random() * width, height + 50, true);
+      }
+
       for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i];
         p.life++;
@@ -105,47 +117,45 @@ export default function InteractiveCanvas() {
           continue;
         }
 
+        // Soft physics
+        p.vy -= 0.002; 
+        p.vx += Math.sin(p.life * p.oscillation) * 0.01; 
+        
+        // Push away from mouse
+        if (isMoving) {
+           const dx = mouse.x - p.x;
+           const dy = mouse.y - p.y;
+           const dist = dx * dx + dy * dy;
+           if (dist < 15000) { 
+              p.vx -= (dx / dist) * 1.5;
+              p.vy -= (dy / dist) * 1.5;
+           }
+        }
+
+        p.vx *= 0.97;
+        p.vy *= 0.97;
+
         p.x += p.vx;
         p.y += p.vy;
-        p.angle += p.rotSpeed;
 
         const lifePercent = p.life / p.maxLife;
-        const currentAlpha = Math.sin(lifePercent * Math.PI) * p.alpha;
+        let currentAlpha = Math.sin(lifePercent * Math.PI) * p.baseAlpha;
+        if (currentAlpha < 0) currentAlpha = 0;
 
-        ctx.save();
-        ctx.translate(p.x, p.y);
-        ctx.rotate(p.angle);
-        
-        // Draw 4-point sparkle structure
         ctx.beginPath();
-        const spike = p.size;
-        const inner = p.size * 0.2;
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         
-        ctx.moveTo(0, -spike);
-        ctx.quadraticCurveTo(inner, -inner, spike, 0);
-        ctx.quadraticCurveTo(inner, inner, 0, spike);
-        ctx.quadraticCurveTo(-inner, inner, -spike, 0);
-        ctx.quadraticCurveTo(-inner, -inner, 0, -spike);
-        ctx.closePath();
+        if (p.isBokeh) {
+           ctx.fillStyle = `rgba(196, 181, 157, ${currentAlpha * 0.6})`;
+           ctx.shadowBlur = p.size * 2.5;
+           ctx.shadowColor = `rgba(196, 181, 157, ${currentAlpha * 0.4})`;
+        } else {
+           ctx.fillStyle = `rgba(141, 126, 107, ${currentAlpha})`;
+           ctx.shadowBlur = p.size * 1.5;
+           ctx.shadowColor = `rgba(215, 205, 190, ${currentAlpha * 1.5})`;
+        }
         
-        // Gold / Champagne tones
-        ctx.fillStyle = `rgba(189, 169, 137, ${currentAlpha})`;
-        ctx.shadowColor = `rgba(189, 169, 137, ${currentAlpha * 0.8})`;
-        ctx.shadowBlur = p.size * 1.5;
         ctx.fill();
-        
-        // White core
-        ctx.beginPath();
-        ctx.moveTo(0, -spike * 0.4);
-        ctx.quadraticCurveTo(inner * 0.4, -inner * 0.4, spike * 0.4, 0);
-        ctx.quadraticCurveTo(inner * 0.4, inner * 0.4, 0, spike * 0.4);
-        ctx.quadraticCurveTo(-inner * 0.4, inner * 0.4, -spike * 0.4, 0);
-        ctx.quadraticCurveTo(-inner * 0.4, -inner * 0.4, 0, -spike * 0.4);
-        ctx.closePath();
-        ctx.fillStyle = `rgba(255, 250, 240, ${currentAlpha})`;
-        ctx.fill();
-
-        ctx.restore();
       }
 
       animationFrameId = requestAnimationFrame(render);
@@ -157,13 +167,14 @@ export default function InteractiveCanvas() {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("resize", handleResize);
       cancelAnimationFrame(animationFrameId);
+      clearTimeout(moveTimeout);
     };
   }, []);
 
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 pointer-events-none z-[9999]"
+      className="fixed inset-0 pointer-events-none z-[1] mix-blend-normal"
       style={{ width: "100vw", height: "100vh" }}
     />
   );

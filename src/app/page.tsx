@@ -17,9 +17,7 @@ export default function Home() {
       <InteractiveCanvas />
 
       {/* Immersive Parallax Hero Component */}
-      <div className="relative z-10">
-        <HeroParallax />
-      </div>
+      <HeroParallax />
 
       {/* Elegant Statement Section */}
       <section className="relative z-20 py-32 md:py-48 px-4 max-w-7xl mx-auto flex flex-col items-center text-center">
@@ -41,9 +39,7 @@ export default function Home() {
       </section>
 
       {/* Interactive Horizontal Gallery */}
-      <div className="relative z-20">
-        <InteractiveGallery />
-      </div>
+      <InteractiveGallery />
 
       {/* Featured Programs Section */}
       <section className="relative z-20 py-32 px-4 max-w-7xl mx-auto">
