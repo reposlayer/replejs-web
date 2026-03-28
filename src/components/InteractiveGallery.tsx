@@ -6,38 +6,38 @@ import Image from "next/image";
 
 const images = [
   {
-    src: "https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?auto=format&fit=crop&w=1200&q=80",
-    title: "SVJESNOST",
+    src: "https://images.squarespace-cdn.com/content/v1/5ec321c2af33de48734cc929/1607007355264-EQINP2XUZQO9PPNNDRZD/Aro%2BHa_0010-larger.jpg",
+    title: "YOGA PLEJS",
     subtitle: "DUBOKA KONEKCIJA",
-    poem: "Svaki pokret počinje iznutra.",
+    poem: "Pronađi svoju unutarnju ravnotežu na Savskoj.",
     y: "0px",
   },
   {
-    src: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=1400&q=80",
-    title: "STRUKTURA",
+    src: "https://images.squarespace-cdn.com/content/v1/64ac0e1c00e67741dc4b2377/1689016059075-1XNS1TTR7ZL5W2KHO56V/image-asset.jpeg",
+    title: "MOBILNOST",
     subtitle: "TEMELJ POKRETA",
-    poem: "Pronaći oslonac u vlastitom tijelu.",
+    poem: "Razvoj funkcionalne fleksibilnosti kroz ugodan pokret.",
     y: "80px",
   },
   {
-    src: "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=1200&q=80",
-    title: "SNAGA",
+    src: "https://images.squarespace-cdn.com/content/v1/5ec321c2af33de48734cc929/1607694644871-IC85FNH781UNZSZEGHDR/Aro+Ha_0428.jpg",
+    title: "REPLEJS",
     subtitle: "UNUTARNJA ENERGIJA",
-    poem: "Mir koji rađa nezaustavljivu silu.",
+    poem: "Iskusi moć pilates reformera na Knežiji.",
     y: "-40px",
   },
   {
-    src: "https://images.unsplash.com/photo-1506126613408-eca07ce68266?auto=format&fit=crop&w=1200&q=80",
-    title: "FOKUS",
+    src: "https://images.squarespace-cdn.com/content/v1/5ec321c2af33de48734cc929/1618497259178-6XJGK9GR6YAVBQL5L519/20140301_Trade-151_012-2.jpg",
+    title: "SNAGA",
     subtitle: "BIVANJE U TRENUTKU",
-    poem: "Kroz otpuštanje dolazimo do biti.",
+    poem: "Fokus na stabilnost centra i zdravlje kralježnice.",
     y: "40px",
   },
   {
-    src: "https://images.unsplash.com/photo-1552858725-2758b5fb1286?auto=format&fit=crop&w=1400&q=80",
-    title: "MIR",
-    subtitle: "KREIRANJE BALANSA",
-    poem: "Tišina između dva udisaja.",
+    src: "https://images.squarespace-cdn.com/content/v1/64ac0e1c00e67741dc4b2377/7364fe5e-fb73-4ea3-8b14-981ba52b2f3e/Untitled+design.jpg",
+    title: "BALANS",
+    subtitle: "KREIRANJE MIRA",
+    poem: "Umirujući vinyasa flow koji vraća tijelo u ravnotežu.",
     y: "-80px",
   }
 ];
@@ -48,14 +48,14 @@ export default function InteractiveGallery() {
   return (
     <section ref={containerRef} className="relative z-20 py-32 md:py-48 w-full max-w-[1400px] mx-auto px-4 md:px-8 overflow-hidden">
       <div className="text-center mb-32">
-         <motion.div 
+          <motion.div 
            initial={{ opacity: 0, y: 30 }}
            whileInView={{ opacity: 1, y: 0 }}
            viewport={{ once: true, margin: "-100px" }}
            transition={{ duration: 1 }}
          >
-            <h2 className="text-5xl md:text-7xl font-serif text-stone-900 tracking-tight leading-[1.1] drop-shadow-sm">
-              Prirodan <span className="italic text-brand-700/80 font-light mix-blend-multiply">Tijek</span>
+            <h2 className="text-5xl md:text-7xl font-serif text-stone-50 tracking-tight leading-[1.1] drop-shadow-none">
+              Naša Cjelokupna <span className="italic text-brand-400 font-light mix-blend-screen">Ponuda</span>
             </h2>
          </motion.div>
       </div>
@@ -81,14 +81,14 @@ function GalleryCard({ item, index }: { item: any, index: number }) {
       className={`flex flex-col md:flex-row items-center gap-12 md:gap-24 relative ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'}`}
     >
       {/* Absolute faint background text */}
-      <div className={`absolute top-1/2 -translate-y-1/2 pointer-events-none -z-10 mix-blend-multiply opacity-5 ${isEven ? 'left-0' : 'right-0'}`}>
-         <h3 className="text-[15vw] font-serif text-brand-900/20 whitespace-nowrap hidden md:block">
+      <div className={`absolute top-1/2 -translate-y-1/2 pointer-events-none -z-10 opacity-5 ${isEven ? 'left-0' : 'right-0'}`}>
+         <h3 className="text-[15vw] font-serif text-brand-100/20 whitespace-nowrap hidden md:block">
             {item.title}
          </h3>
       </div>
 
       <div 
-        className="w-full md:w-3/5 aspect-[4/5] object-cover relative overflow-hidden rounded-[2rem] md:rounded-[3rem] shadow-[0_20px_60px_rgba(255,183,197,0.15)] group"
+        className="w-full md:w-3/5 aspect-[4/5] object-cover relative overflow-hidden rounded-none md:rounded-none shadow-[0_20px_60px_rgba(181,159,125,0.15)] group"
         style={{ transform: `translateY(${item.y})` }}
       >
         <motion.div 
@@ -106,18 +106,18 @@ function GalleryCard({ item, index }: { item: any, index: number }) {
           />
         </motion.div>
         
-        {/* Soft pinkish vignette */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#FFB7C5]/10 via-stone-900/5 to-transparent mix-blend-multiply opacity-50 group-hover:opacity-10 transition-opacity duration-1000 pointer-events-none" />
+        {/* Soft dark vignette */}
+        <div className="absolute inset-0 bg-gradient-to-t from-brand-900/40 via-stone-900/10 to-transparent mix-blend-multiply opacity-50 group-hover:opacity-10 transition-opacity duration-1000 pointer-events-none" />
       </div>
 
       <div className="w-full md:w-2/5 flex flex-col justify-center relative space-y-6 md:space-y-8 z-10 px-4 md:px-0">
-         <span className="text-[#FFB7C5] font-sans tracking-[0.4em] uppercase text-xs flex items-center gap-4 before:h-[1px] before:w-12 before:bg-[#FFB7C5]">
+         <span className="text-brand-400 font-sans tracking-[0.4em] uppercase text-xs flex items-center gap-4 before:h-[1px] before:w-12 before:bg-brand-500">
            Pogled 0{index + 1}
          </span>
-         <h3 className="text-4xl md:text-5xl lg:text-6xl font-serif text-stone-900">
+         <h3 className="text-4xl md:text-5xl lg:text-6xl font-serif text-stone-50">
            {item.title}
          </h3>
-         <p className="text-stone-500 font-light text-lg md:text-xl leading-relaxed italic">
+         <p className="text-stone-300 font-light text-lg md:text-xl leading-relaxed italic">
            "{item.poem}"
          </p>
       </div>

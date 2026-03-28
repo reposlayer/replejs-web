@@ -85,14 +85,14 @@ export default function CursorGlow() {
           y: ambientY,
           translateX: "-50%",
           translateY: "-50%",
-          background: "radial-gradient(circle, rgba(230, 200, 205, 0.18) 0%, rgba(245, 220, 225, 0.08) 25%, transparent 60%)",
+          background: "radial-gradient(circle, rgba(181, 159, 125, 0.18) 0%, rgba(181, 159, 125, 0.08) 25%, transparent 60%)",
           opacity: isVisible ? 1 : 0,
           transition: "opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1)",
         }}
       />
       
       <motion.div
-        className="fixed top-0 left-0 pointer-events-none z-[9998] rounded-full mix-blend-difference bg-white will-change-transform"
+        className="fixed top-0 left-0 pointer-events-none z-[9998] rounded-full border border-brand-400 bg-brand-500/10 backdrop-blur-[1px] will-change-transform"
         style={{
           x: midX,
           y: midY,
@@ -108,7 +108,7 @@ export default function CursorGlow() {
       />
 
       <motion.div
-        className="fixed top-0 left-0 pointer-events-none z-[9999] rounded-full bg-[#FFB7C5] shadow-[0_0_15px_rgba(255,183,197,1)] will-change-transform"
+        className="fixed top-0 left-0 pointer-events-none z-[9999] rounded-full bg-brand-500 shadow-[0_0_10px_rgba(166,123,106,0.8)] will-change-transform"
         style={{
           width: "6px",
           height: "6px",

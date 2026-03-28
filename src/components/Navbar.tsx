@@ -5,7 +5,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
-import Magnetic from "@/components/Magnetic";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -21,104 +20,94 @@ export default function Navbar() {
 
   const links = [
     { href: "/programi", label: "Programi" },
-    { href: "/radionice", label: "Edukacije" },
+    { href: "/privatna-yoga", label: "Privatna praksa" },
     { href: "/raspored", label: "Raspored" },
     { href: "/o-nama", label: "O nama" },
+    { href: "/tim", label: "Tim" },
+    { href: "/novosti", label: "Novosti" },
     { href: "/kontakt", label: "Kontakt" },
   ];
+
+  const isHome = pathname === "/";
+  const isDarkModeHeader = isHome && !isScrolled;
 
   return (
     <>
       <motion.nav 
-        initial={{ y: -100, opacity: 0 }}
+        initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
-        className="fixed top-0 w-full z-[100] flex justify-center mt-6 px-4 md:px-0 pointer-events-none"
+        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+        className={`fixed top-0 w-full z-[100] transition-all duration-700 ease-in-out px-6 md:px-12 py-8 flex justify-between items-center ${
+          isScrolled ? "bg-white/90 backdrop-blur-md border-b border-stone-200 py-4" : "bg-transparent border-transparent"
+        }`}
       >
-        <div 
-          className={`pointer-events-auto flex justify-between items-center transition-all duration-700 ease-[0.16,1,0.3,1] rounded-full overflow-hidden
-            ${isScrolled 
-              ? "bg-white/40 backdrop-blur-3xl border border-white/60 shadow-[0_8px_40px_rgba(255,183,197,0.2)] px-6 py-3 w-full max-w-4xl" 
-              : "bg-transparent border-transparent px-8 py-5 w-full max-w-7xl"
-            }
-          `}
-        >
-          <Magnetic>
-            <Link href="/" className="text-xl md:text-2xl font-serif tracking-[0.25em] uppercase text-stone-900 group">
-              <span className="group-hover:text-[#D87093] transition-colors duration-500">Apolon</span>
-            </Link>
-          </Magnetic>
-          
-          <div className="hidden md:flex gap-8 font-sans text-[10px] tracking-[0.25em] uppercase items-center font-semibold">
-            {links.map((link) => {
-              const isActive = pathname === link.href;
-              return (
-                <Magnetic key={link.href}>
-                  <Link 
-                    href={link.href}
-                    className={`relative px-2 py-2 group transition-all duration-500 flex flex-col items-center
-                      ${isActive ? "text-[#D87093]" : "text-stone-600 hover:text-stone-900"}
-                    `}
-                  >
-                    {link.label}
-                    <span 
-                      className={`absolute -bottom-1 w-1 h-1 rounded-full transition-all duration-500
-                        ${isActive 
-                          ? "bg-[#D87093] opacity-100 scale-100 shadow-[0_0_8px_rgba(216,112,147,0.8)]" 
-                          : "bg-[#FFB7C5] opacity-0 scale-0 group-hover:scale-100 group-hover:opacity-100"
-                        }
-                      `} 
-                    />
-                  </Link>
-                </Magnetic>
-              );
-            })}
-          </div>
-
-          <button 
-            className="md:hidden p-2 text-stone-900 transition-transform active:scale-95 z-50 pointer-events-auto"
-            onClick={() => setIsMobileMenuOpen(true)}
-          >
-            <Menu size={24} strokeWidth={1.5} />
-          </button>
+        <Link href="/" className={`text-xl md:text-2xl font-serif tracking-[0.1em] z-[101] uppercase transition-colors duration-500 ${isDarkModeHeader ? "text-stone-50" : "text-stone-900"}`}>
+          Yoga Plejs
+        </Link>
+        
+        <div className="hidden lg:flex gap-10 font-sans text-[10px] md:text-xs tracking-[0.2em] uppercase items-center">
+          {links.map((link) => {
+            const isActive = pathname === link.href;
+            return (
+                <Link 
+                  key={link.href}
+                  href={link.href}
+                  className={`relative py-1 group transition-colors duration-500 overflow-hidden
+                    ${isActive 
+                      ? (isDarkModeHeader ? "text-stone-50 font-medium" : "text-stone-900 font-medium") 
+                      : (isDarkModeHeader ? "text-stone-300 hover:text-stone-50" : "text-stone-500 hover:text-stone-900")}
+                  `}
+                >
+                  {link.label}
+                  <span 
+                    className={`absolute bottom-0 left-0 w-full h-[1px] transition-transform duration-500 origin-left ${isDarkModeHeader ? "bg-stone-50" : "bg-stone-900"}
+                      ${isActive ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"}
+                    `} 
+                  />
+                </Link>
+            );
+          })}
         </div>
+
+        <button 
+          className={`lg:hidden p-2 z-[210] transition-transform active:scale-95 duration-500 ${isDarkModeHeader && !isMobileMenuOpen ? "text-stone-50" : "text-stone-900"}`}
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        >
+          {isMobileMenuOpen ? <X size={28} strokeWidth={1} /> : <Menu size={28} strokeWidth={1} />}
+        </button>
       </motion.nav>
 
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div 
-            initial={{ opacity: 0, clipPath: "circle(0% at 100% 0)" }}
-            animate={{ opacity: 1, clipPath: "circle(150% at 100% 0)" }}
-            exit={{ opacity: 0, clipPath: "circle(0% at 100% 0)" }}
-            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed inset-0 min-h-screen bg-white/90 backdrop-blur-3xl z-[200] flex flex-col pt-24 px-8 overflow-hidden pointer-events-auto"
+            initial={{ opacity: 0, y: "-100%" }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: "-100%" }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed inset-0 min-h-screen bg-stone-50 z-[200] flex flex-col pt-32 px-8 overflow-hidden"
           >
-            <div className="absolute top-1/4 -right-1/4 w-[600px] h-[600px] bg-[#FFB7C5]/30 blur-[100px] rounded-full pointer-events-none" />
-            
-            <button 
-              className="absolute top-8 right-8 p-4 text-stone-500 hover:text-stone-900 transition-colors z-[210]"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              <X size={32} strokeWidth={1} />
-            </button>
-            <div className="flex flex-col gap-8 text-4xl font-serif tracking-widest mt-16 relative z-10">
+            <div className="flex flex-col gap-6 text-4xl md:text-5xl font-serif tracking-tight mt-12 text-stone-900">
               {links.map((link, idx) => (
                 <motion.div
                   key={link.href}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.2 + idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                  initial={{ opacity: 0, x: -30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 0.1 + idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
                 >
                   <Link 
                     href={link.href}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="inline-block hover:text-[#D87093] transition-colors relative group"
+                    className="inline-block hover:text-brand-500 transition-colors relative group"
                   >
-                    <span className="font-sans text-sm text-[#FFB7C5] absolute -left-8 top-2 opacity-50">0{idx + 1}</span>
+                    <span className="font-sans text-[10px] tracking-widest uppercase text-stone-400 absolute -top-2 -left-6 md:-left-8 opacity-50">0{idx + 1}</span>
                     <span className="">{link.label}</span>
                   </Link>
                 </motion.div>
               ))}
+            </div>
+            <div className="mt-auto mb-12 flex flex-col gap-4 text-xs font-sans tracking-widest uppercase text-stone-400">
+               <a href="mailto:info@yogaplejs.com" className="hover:text-stone-900 transition-colors">info@yogaplejs.com</a>
+               <p>Savska cesta 141 / Knežija</p>
             </div>
           </motion.div>
         )}

@@ -1,160 +1,122 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { MoveRight, Wind, Activity, Sun } from "lucide-react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { MoveRight } from "lucide-react";
 import Link from "next/link";
-import HeroParallax from "@/components/HeroParallax";
-import TiltCard from "@/components/TiltCard";
-import Magnetic from "@/components/Magnetic";
-import InteractiveGallery from "@/components/InteractiveGallery";
+import { useRef } from "react";
+import SplitHero from "@/components/SplitHero";
+import HorizontalScroll from "@/components/HorizontalScroll";
 
-export default function Home() {
+function TextReveal({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen selection:bg-brand-400 selection:text-white pb-0 group/main relative overflow-hidden bg-transparent">
-      
-      {/* Immersive Parallax Hero Component */}
-      <HeroParallax />
-
-      {/* Elegant Statement Section */}
-      <section className="relative z-20 py-32 md:py-48 px-4 max-w-7xl mx-auto flex flex-col items-center text-center">
-         <motion.div 
-           initial={{ opacity: 0, y: 40 }}
-           whileInView={{ opacity: 1, y: 0 }}
-           viewport={{ once: true, margin: "-100px" }}
-           transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-         >
-           <h2 className="text-4xl md:text-6xl lg:text-7xl font-serif text-stone-900 leading-[1.1] tracking-tight mb-8">
-             Više od pokreta.<br />
-             <span className="italic font-light text-brand-600">Povratak esenciji.</span>
-           </h2>
-           <p className="text-lg md:text-xl text-stone-500 max-w-2xl mx-auto font-light leading-relaxed">
-             Tristana Studio je utočište u kojem se biomehanika susreće s tradicijom. 
-             Naš sustav je dizajniran za rekalibraciju vašeg živčanog sustava i buđenje urođenog potencijala.
-           </p>
-         </motion.div>
-      </section>
-
-      {/* Interactive Horizontal Gallery */}
-      <InteractiveGallery />
-
-      {/* Featured Programs Section */}
-      <section className="relative z-20 py-32 px-4 max-w-7xl mx-auto">
-        <motion.div 
-           initial={{ opacity: 0, y: 30 }}
-           whileInView={{ opacity: 1, y: 0 }}
-           viewport={{ once: true }}
-           transition={{ duration: 1 }}
-           className="flex flex-wrap items-end justify-between mb-16 gap-8"
-        >
-          <div>
-            <span className="text-brand-500 font-sans tracking-[0.3em] uppercase text-xs mb-4 flex items-center gap-4 before:h-px before:w-12 before:bg-brand-200">
-              Naša Praksa
-            </span>
-            <h2 className="text-4xl md:text-5xl font-serif text-stone-900">Temeljni <span className="italic text-brand-700">Programi</span></h2>
-          </div>
-          <Magnetic>
-             <Link href="/programi" className="flex items-center gap-3 text-xs font-semibold tracking-[0.2em] uppercase text-stone-900 border-b border-stone-900 pb-1 hover:text-brand-600 hover:border-brand-600 transition-colors">
-               Pregledaj Sve <MoveRight size={14} />
-             </Link>
-          </Magnetic>
-        </motion.div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-           <ProgramCard 
-             title="Feldenkrais Metoda" 
-             desc="Znanstveno utemeljen pristup svjesnom pokretu koji trajno obnavlja motoriku." 
-             href="/programi/feldenkrais" 
-             Icon={Wind}
-             delay={0}
-             highlight
-           />
-           <ProgramCard 
-             title="Tai Chi i QiGong" 
-             desc="Drevna kineska vještina za kultiviranje životne energije i duboku relaksaciju uma." 
-             href="/programi/tai-chi-qigong" 
-             Icon={Activity}
-             delay={0.1}
-           />
-           <ProgramCard 
-             title="Holistička Joga" 
-             desc="Vježbanje asana koje vraća snagu tijelu i donosi apsolutni balans svakodnevici." 
-             href="/programi/joga" 
-             Icon={Sun}
-             delay={0.2}
-           />
-        </div>
-      </section>
-
-      {/* Interactive CTA Banner */}
-      <section className="relative z-20 w-full mb-32 px-4 max-w-7xl mx-auto">
-         <motion.div 
-           initial={{ opacity: 0, scale: 0.95 }}
-           whileInView={{ opacity: 1, scale: 1 }}
-           viewport={{ once: true, margin: "-100px" }}
-           transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
-           className="w-full bg-stone-900 rounded-[3rem] p-12 md:p-24 overflow-hidden relative flex flex-col items-center justify-center text-stone-50 border border-stone-800 shadow-2xl group"
-         >
-            <div className="absolute inset-0 bg-brand-900/20 mix-blend-color-burn opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-brand-400/10 blur-[100px] rounded-full pointer-events-none group-hover:bg-brand-500/20 transition-colors duration-1000" />
-            
-            <div className="max-w-2xl z-20 text-center flex flex-col items-center">
-              <span className="text-white/50 text-xs tracking-[0.3em] uppercase mb-6 drop-shadow-sm">Studio u Rijeci</span>
-              <h2 className="text-4xl md:text-6xl font-serif leading-tight mb-8">Započnite Svoju <br/><span className="italic text-brand-300">Transformaciju</span></h2>
-              
-              <Magnetic>
-                 <Link href="/kontakt" className="px-10 py-5 bg-white text-stone-950 rounded-full font-semibold uppercase tracking-[0.2em] text-xs inline-flex items-center gap-4 hover:shadow-[0_0_50px_rgba(255,255,255,0.3)] transition-all duration-500 group/btn">
-                    Rezervirajte Termin <div className="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center group-hover/btn:scale-110 group-hover/btn:bg-brand-50 transition-all duration-500"><MoveRight size={14} className="text-brand-600" /></div>
-                 </Link>
-              </Magnetic>
-            </div>
-         </motion.div>
-      </section>
-
+    <div className="overflow-hidden">
+      <motion.div
+        initial={{ y: "100%", rotate: 2 }}
+        whileInView={{ y: 0, rotate: 0 }}
+        viewport={{ once: true, margin: "-10%" }}
+        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+        className="origin-bottom-left"
+      >
+        {children}
+      </motion.div>
     </div>
   );
 }
 
-function ProgramCard({ title, desc, href, Icon, delay, highlight = false }: any) {
+export default function Home() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
+
+  const yText = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+
   return (
-    <motion.div
-       initial={{ opacity: 0, y: 40 }}
-       whileInView={{ opacity: 1, y: 0 }}
-       viewport={{ once: true, margin: "-50px" }}
-       transition={{ duration: 1, delay, ease: [0.16, 1, 0.3, 1] }}
-    >
-      <TiltCard>
-        <Link 
-          href={href} 
-          className={`block w-full h-full rounded-[2rem] p-10 shadow-lg hover:shadow-2xl transition-all duration-700 overflow-hidden relative group/card border
-            ${highlight ? 'bg-brand-900 text-white border-brand-800' : 'bg-white/60 backdrop-blur-2xl text-stone-900 border-white/60'}
-          `}
-        >
-          {/* Subtle hover gradient */}
-          <div className={`absolute inset-0 opacity-0 group-hover/card:opacity-100 transition-opacity duration-700 pointer-events-none
-            ${highlight ? 'bg-gradient-to-br from-brand-800 to-transparent' : 'bg-gradient-to-br from-brand-50 to-transparent'}
-          `} />
-          
-          <div className={`mb-8 inline-flex items-center justify-center w-16 h-16 rounded-2xl group-hover/card:scale-110 group-hover/card:-rotate-12 transition-all duration-500
-            ${highlight ? 'bg-white/10 text-brand-200 border border-white/20' : 'bg-brand-50 text-brand-600 border border-brand-100'}
-          `}>
-            <Icon strokeWidth={1} size={32} />
-          </div>
-          
-          <h3 className={`font-serif text-3xl mb-4 group-hover/card:-translate-y-1 transition-transform duration-500
-            ${highlight ? 'text-white' : 'text-stone-900'}
-          `}>{title}</h3>
-          
-          <p className={`leading-relaxed text-sm mb-12 line-clamp-3 font-light
-            ${highlight ? 'text-brand-100/80' : 'text-stone-500'}
-          `}>{desc}</p>
-          
-          <span className={`text-xs uppercase tracking-[0.2em] font-medium flex items-center gap-3 group-hover/card:gap-5 transition-all
-            ${highlight ? 'text-brand-300' : 'text-brand-600'}
-          `}>
-            Detaljnije <MoveRight size={14} className="group-hover/card:translate-x-1 transition-transform" />
-          </span>
-        </Link>
-      </TiltCard>
-    </motion.div>
+    <div className="min-h-screen selection:bg-brand-400 selection:text-white pb-0 bg-stone-50 overflow-x-clip w-full">
+      
+      {/* 1. Split Hero Section (Yoga vs Pilates) */}
+      <SplitHero />
+
+      {/* 2. Bespoke Editorial Statement */}
+      <section ref={containerRef} className="relative z-20 py-48 md:py-64 px-4 w-full flex flex-col items-center justify-center text-center bg-stone-50 border-t border-stone-200 border-b">
+         
+         {/* Very subtle kinfolk aesthetic backdrop grain overlay if needed, currently pure minimal */}
+
+         <span className="text-stone-400 font-sans tracking-[0.4em] uppercase text-xs mb-12 flex items-center justify-center gap-4 before:h-px before:w-16 before:bg-stone-300 after:h-px after:w-16 after:bg-stone-300 z-10 relative">
+            Filozofija Pokreta
+         </span>
+         
+         <h2 className="text-[10vw] md:text-[8vw] font-serif text-stone-900 leading-[0.8] tracking-tighter mb-16 z-10 relative mix-blend-multiply">
+           <TextReveal>Triljardu</TextReveal>
+           <TextReveal><span className="italic font-light text-brand-500 block pr-[4vw]">mogućnosti.</span></TextReveal>
+           <TextReveal><span className="ml-[6vw]">Jedan ti.</span></TextReveal>
+         </h2>
+
+         <motion.p 
+           initial={{ opacity: 0, y: 40 }}
+           whileInView={{ opacity: 1, y: 0 }}
+           viewport={{ once: true, margin: "-100px" }}
+           transition={{ duration: 1.2, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+           className="text-lg md:text-2xl text-stone-500 max-w-3xl mx-auto font-light leading-relaxed z-10 relative px-4"
+         >
+           Replejs i Yogaplejs zajedno čine autentični prostor u Zagrebu. Ne samo za trening, već za povratak vlastitom balansu. Ovdje tradicija stvara vaš novi habitus.
+         </motion.p>
+      </section>
+
+      {/* 3. Horizontal Scroll Section (Awwwards Style) */}
+      <div className="relative z-20 w-full mt-[-2px]">
+        <HorizontalScroll />
+      </div>
+
+      {/* 4. Luxury Light Mode Links */}
+      <section className="relative z-20 py-48 px-6 max-w-7xl mx-auto bg-stone-50">
+        <div className="flex flex-col md:flex-row justify-between items-end mb-24 gap-12 border-b border-stone-200 pb-12">
+           <h2 className="text-5xl md:text-7xl font-serif text-stone-900 leading-none tracking-tight">
+             Nema <span className="italic text-stone-400">isprika.<br /></span>Samo <span className="underline decoration-1 underline-offset-8 decoration-stone-300">praksa.</span>
+           </h2>
+           <Link href="/raspored" className="group inline-flex items-center gap-4 text-xs font-medium tracking-[0.2em] uppercase text-stone-900 hover:text-brand-600 hover:gap-6 transition-all duration-500 pb-2">
+             Pogledaj Raspored <MoveRight size={14} className="group-hover:translate-x-2 transition-transform duration-500" />
+           </Link>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-0 md:gap-8">
+           <motion.div
+             initial={{ opacity: 0, y: 20 }}
+             whileInView={{ opacity: 1, y: 0 }}
+             viewport={{ once: true, margin: "-100px" }}
+             transition={{ duration: 1 }}
+           >
+               <Link href="/o-nama" className="group block w-full aspect-[4/3] bg-stone-100 p-12 relative overflow-hidden flex flex-col justify-between hover:bg-stone-200 transition-colors duration-700">
+                 <div className="flex justify-between items-start">
+                   <h3 className="text-3xl md:text-5xl font-serif text-stone-900 z-10 relative mb-4">Naša Filozofija</h3>
+                   <div className="w-12 h-12 rounded-full border border-stone-300 flex items-center justify-center text-stone-400 group-hover:bg-brand-500 group-hover:border-brand-500 group-hover:text-white transition-all duration-700 z-10 group-hover:-rotate-45">
+                     <MoveRight size={20} />
+                   </div>
+                 </div>
+                 <p className="text-stone-500 font-light max-w-sm z-10 relative group-hover:text-stone-900 transition-colors">Upoznajte snagu 11 godina iskustva kroz prizmu naših osnivača.</p>
+               </Link>
+           </motion.div>
+
+           <motion.div
+             initial={{ opacity: 0, y: 20 }}
+             whileInView={{ opacity: 1, y: 0 }}
+             viewport={{ once: true, margin: "-100px" }}
+             transition={{ duration: 1, delay: 0.2 }}
+           >
+               <Link href="/kontakt" className="group block w-full aspect-[4/3] bg-stone-900 p-12 relative overflow-hidden flex flex-col justify-between hover:bg-brand-700 transition-colors duration-700 mt-8 md:mt-0">
+                 <div className="flex justify-between items-start">
+                   <h3 className="text-3xl md:text-5xl font-serif text-stone-50 z-10 relative mb-4">Rezerviraj Mjesto</h3>
+                   <div className="w-12 h-12 rounded-full border border-stone-700 flex items-center justify-center text-stone-400 group-hover:bg-white group-hover:border-white group-hover:text-stone-900 transition-all duration-700 z-10 group-hover:-rotate-45">
+                     <MoveRight size={20} />
+                   </div>
+                 </div>
+                 <p className="text-stone-400 font-light max-w-sm z-10 relative group-hover:text-stone-900 transition-colors">Broj mjesta u grupama je strogo ograničen. Rezerviraj svoje odmah.</p>
+               </Link>
+           </motion.div>
+        </div>
+      </section>
+
+    </div>
   );
 }

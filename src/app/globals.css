@@ -1,21 +1,27 @@
 @import "tailwindcss";
 
 @theme {
-  --color-stone-50: #FCFBF8;
-  --color-stone-100: #F3F1E7;
-  --color-stone-800: #2C302E;
-  --color-stone-900: #1B1E1C;
-  --color-accent-400: #A89F91;
-  --color-accent-700: #736C61;
-  
-  /* Classy forest green/sage accents for nature feel */
-  --color-brand-100: #E6EAE3;
-  --color-brand-400: #8FA690;
-  --color-brand-700: #465848;
-  --color-brand-900: #263327;
+  /* Warm Kinfolk Light Base */
+  --color-stone-50: #faf9f6;
+  --color-stone-100: #f2efe9;
+  --color-stone-200: #e6e1d6;
+  --color-stone-300: #d5cebf;
+  --color-stone-400: #a39c8e;
+  --color-stone-500: #8c8577;
+  --color-stone-800: #3c3b38;
+  --color-stone-900: #262523;
+  --color-stone-950: #1a1917;
 
-  --font-sans: var(--font-montserrat);
-  --font-serif: var(--font-cormorant);
+  /* Terra Cotta / Earth Accents */
+  --color-brand-100: #f4ece8;
+  --color-brand-400: #c19a8b;
+  --color-brand-500: #a67b6a; 
+  --color-brand-600: #8c6353;
+  --color-brand-700: #6b493e;
+  --color-brand-900: #3a2822;
+
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
 }
 
 html, body {
@@ -45,9 +51,5 @@ h1, h2, h3, h4, h5, h6 {
   animation-delay: 4s;
 }
 
-@media (pointer: fine) {
-  * {
-    cursor: none !important;
-  }
-}
+
 
