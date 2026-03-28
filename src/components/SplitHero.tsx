@@ -13,7 +13,7 @@ export default function SplitHero() {
   const rightImage = "https://images.squarespace-cdn.com/content/v1/5ec321c2af33de48734cc929/1618497259178-6XJGK9GR6YAVBQL5L519/20140301_Trade-151_012-2.jpg";
 
   // Shared transitions for ultra-smooth layout shifting
-  const transition = { duration: 1.2, ease: [0.16, 1, 0.3, 1] };
+  const transition = { duration: 1.2, ease: [0.16, 1, 0.3, 1] as const };
 
   return (
     <section className="relative w-full h-[100svh] min-h-[600px] flex flex-col md:flex-row overflow-hidden bg-stone-50">
